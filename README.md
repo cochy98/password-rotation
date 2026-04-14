@@ -39,7 +39,7 @@ Laravel package per la rotazione obbligatoria delle password. Supporta:
 "repositories": [
     {
         "type": "vcs",
-        "url": "https://github.com/cosmoferrigno/password-rotation"
+        "url": "https://github.com/cochy98/password-rotation"
     }
 ],
 "require": {
