@@ -31,6 +31,27 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Mappatura colonne della tabella utenti
+    |--------------------------------------------------------------------------
+    | 'id'      — chiave primaria.
+    | 'name'    — colonna o accessor Eloquent usato per visualizzare il nome
+    |             utente nel frontend. Può essere un accessor (es. 'full_name')
+    |             o una singola colonna (es. 'first_name'). Il controller
+    |             usa getAttribute() quindi funziona con entrambi.
+    | 'email'   — colonna email.
+    | 'sort_by' — array di colonne DB usate per l'ORDER BY della query.
+    |             Usare colonne reali (non accessor), es. ['first_name', 'last_name'].
+    |             Se omesso, il fallback è la colonna 'name'.
+    */
+    'user_columns' => [
+        'id'      => 'id',
+        'name'    => 'full_name',
+        'email'   => 'email',
+        'sort_by' => ['first_name', 'last_name'],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Route di cambio password
     |--------------------------------------------------------------------------
     | Nome della route a cui l'utente viene reindirizzato quando la password
@@ -75,6 +96,30 @@ return [
     'excluded_routes' => [
         // 'password.change',
         // 'logout',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Gate di gestione
+    |--------------------------------------------------------------------------
+    | Nome del Gate che protegge le rotte di amministrazione (lista utenti,
+    | force reset). Viene definito nel ServiceProvider con un default basato
+    | su is_admin; l'applicazione host può ridefinirlo in AuthServiceProvider.
+    */
+    'gate' => env('PASSWORD_ROTATION_GATE', 'manage-password-rotation'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rotte di amministrazione
+    |--------------------------------------------------------------------------
+    | Il package registra automaticamente le rotte per la lista utenti e il
+    | force-reset. Imposta 'enabled' a false per gestirle nell'host app.
+    |
+    | 'inertia_component' — nome del componente Inertia da renderizzare.
+    */
+    'admin_routes' => [
+        'enabled'          => env('PASSWORD_ROTATION_ADMIN_ROUTES', true),
+        'inertia_component' => env('PASSWORD_ROTATION_INERTIA_COMPONENT', 'PasswordRotation/Users'),
     ],
 
 ];
