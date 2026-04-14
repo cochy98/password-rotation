@@ -1,0 +1,29 @@
+{
+    "name": "cosmoferrigno/password-rotation",
+    "version": "1.0.0",
+    "description": "Enforces periodic password rotation for Laravel applications",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Cosmoferrigno\\PasswordRotation\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Cosmoferrigno\\PasswordRotation\\PasswordRotationServiceProvider"
+            ],
+            "aliases": {
+                "PasswordRotation": "Cosmoferrigno\\PasswordRotation\\Facades\\PasswordRotation"
+            }
+        }
+    },
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "illuminate/database": "^10.0|^11.0|^12.0",
+        "illuminate/http": "^10.0|^11.0|^12.0",
+        "illuminate/console": "^10.0|^11.0|^12.0"
+    }
+}
