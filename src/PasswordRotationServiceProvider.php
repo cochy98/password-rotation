@@ -2,7 +2,6 @@
 
 namespace Cosmoferrigno\PasswordRotation;
 
-use Cosmoferrigno\PasswordRotation\Console\Commands\InstallCommand;
 use Cosmoferrigno\PasswordRotation\Middleware\CheckPasswordRotation;
 use Cosmoferrigno\PasswordRotation\Services\PasswordRotationService;
 use Illuminate\Support\ServiceProvider;
@@ -31,14 +30,28 @@ class PasswordRotationServiceProvider extends ServiceProvider
             __DIR__.'/../config/password-rotation.php' => config_path('password-rotation.php'),
         ], 'password-rotation-config');
 
-        // Pubblica gli stub delle migration (con timestamp dinamico via InstallCommand)
+        // Pubblica la migration
         $this->publishes([
-            __DIR__.'/../stubs/' => $this->app->basePath('stubs/vendor/password-rotation'),
-        ], 'password-rotation-stubs');
+            __DIR__.'/../stubs/add_password_expires_at_to_users_table.php.stub' 
+                => database_path('migrations/' . date('Y_m_d_His') . '_add_password_expires_at_to_users_table.php'),
+        ], 'password-rotation-migrations');
 
-        // Registra i comandi Artisan
-        if ($this->app->runningInConsole()) {
-            $this->commands([InstallCommand::class]);
+        // Pubblica il componente React/Inertia (obbigatorio se si usano le rotte del package con Inertia)
+        $this->publishes([
+            __DIR__.'/../stubs/ChangePassword.tsx.stub' => resource_path('js/Pages/Auth/ChangePassword.tsx'),
+        ], 'password-rotation-react');
+
+        // Pubblica la Blade view (override opzionale)
+        $this->publishes([
+            __DIR__.'/../resources/views/' => resource_path('views/vendor/password-rotation'),
+        ], 'password-rotation-views');
+
+        // Registra le view del package con namespace 'password-rotation::'
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'password-rotation');
+
+        // Registra le route del package (disabilitabile via config)
+        if (config('password-rotation.routes.enabled', true)) {
+            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         }
 
         // Registra l'alias del middleware

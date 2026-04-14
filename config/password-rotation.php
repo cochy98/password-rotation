@@ -34,9 +34,36 @@ return [
     | Route di cambio password
     |--------------------------------------------------------------------------
     | Nome della route a cui l'utente viene reindirizzato quando la password
-    | è scaduta. La route deve essere definita nell'applicazione host.
+    | è scaduta. Il package registra questa route automaticamente a meno che
+    | 'routes.enabled' non sia false.
     */
     'change_route' => env('PASSWORD_ROTATION_CHANGE_ROUTE', 'password.change'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Route interne del package
+    |--------------------------------------------------------------------------
+    | Il package registra automaticamente GET/POST /password/change.
+    | Imposta 'enabled' a false se vuoi definire le route nell'applicazione
+    | host (es. per personalizzare il controller o l'URL).
+    |
+    | 'middleware' — applicato al gruppo di route del package.
+    | 'prefix'     — prefisso URL aggiuntivo (default: nessuno).
+    */
+    'routes' => [
+        'enabled'    => env('PASSWORD_ROTATION_ROUTES', true),
+        'middleware' => ['web', 'auth'],
+        'prefix'     => '',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Redirect dopo il cambio password
+    |--------------------------------------------------------------------------
+    | Nome della route a cui l'utente viene reindirizzato dopo aver aggiornato
+    | la password con successo.
+    */
+    'redirect_after_change' => env('PASSWORD_ROTATION_REDIRECT', '/'),
 
     /*
     |--------------------------------------------------------------------------
