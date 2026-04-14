@@ -33,8 +33,6 @@ class PasswordChangeController extends Controller
             'password' => Hash::make($request->validated()['password']),
         ])->save();
 
-        $user->markPasswordChanged();
-
         return redirect()->intended(config('password-rotation.redirect_after_change', '/'))
             ->with('status', 'Password aggiornata con successo.');
     }

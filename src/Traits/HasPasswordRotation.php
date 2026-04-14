@@ -41,7 +41,30 @@ trait HasPasswordRotation
     }
 
     /**
-     * Calcola e salva la nuova password_expires_at. Da chiamare dopo il cambio password.
+     * Intercetta qualsiasi salvataggio del modello: se il campo `password` è dirty
+     * (cambio avvenuto tramite qualsiasi canale), aggiorna password_expires_at
+     * nello stesso write, senza un ulteriore save().
+     */
+    public static function bootHasPasswordRotation(): void
+    {
+        static::saving(function ($user): void {
+            if (! $user->isDirty('password')) {
+                return;
+            }
+
+            $service      = app(PasswordRotationService::class);
+            $rotationDays = $service->getRotationDays();
+
+            $user->password_expires_at = $rotationDays > 0
+                ? now()->addDays($rotationDays)
+                : null;
+        });
+    }
+
+    /**
+     * Calcola e salva la nuova password_expires_at.
+     * Utile per reset espliciti (es. admin che forza il rinnovo) indipendentemente
+     * da un cambio password.
      */
     public function markPasswordChanged(): void
     {
