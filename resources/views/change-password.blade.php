@@ -50,6 +50,13 @@
 
             <button type="submit">Aggiorna password</button>
         </form>
+
+        <form method="POST" action="{{ route('logout') }}" style="margin-top:1rem;text-align:center;">
+            @csrf
+            <button type="submit" style="background:none;border:none;color:#6b7280;font-size:.8125rem;cursor:pointer;text-decoration:underline;padding:0;">
+                Non puoi cambiare la password adesso? Esegui il logout
+            </button>
+        </form>
     </div>
 </body>
 </html>
